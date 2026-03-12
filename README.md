@@ -1,4 +1,10 @@
 # Laboratorio 1
+
+
+probando 
+commit
+
+
 [ Objetivo ]
 Integrar Github + Jenkins (CI) logrando el siguiente flujo:
 
@@ -11,7 +17,7 @@ Instalar dependencias
   ↓
 Despliega el proyecto
 
-
+ 
 Para lo anterior deberan:
 - Clonar el repositorio y subirlo a su cuenta de github (repositorio publico)
 - Iniciar Docker y levantar una imagen de Jenkins
