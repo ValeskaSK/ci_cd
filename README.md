@@ -1,22 +1,67 @@
-# React + Vite
+# Laboratorio 1
+[ Objetivo ]
+Integrar Github + Jenkins (CI) logrando el siguiente flujo:
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+GITHUB push
+  ↓
+Conexión a Jenkins mediante Ngrok
+Jenkins
+  ↓
+Instalar dependencias
+  ↓
+Despliega el proyecto
 
-## Pruebas y seguridad
 
-- **Ejecutar tests unitarios:** `npm run test` (Vitest).
-- **Escanar vulnerabilidades con Snyk:** `npm run security`. La primera vez ejecuta `npx snyk auth` para autenticarte.
-- **Auditoría de dependencias (sin cuenta):** `npm run security:audit` (usa `npm audit`).
+Para lo anterior deberan:
+- Clonar el repositorio y subirlo a su cuenta de github (repositorio publico)
+- Iniciar Docker y levantar una imagen de Jenkins
+- Descargar e iniciar ngrok
+- Generar un tunel para el servicio de Jenkins
+- Crear un nuevo item en Jenkins de tipo pipeline
+- Conectar el repositorio de Github WebHooks con Jenkins
+- Configurar el Pipeline script con las siguientes instrucciones:
 
-Currently, two official plugins are available:
+properties([
+  pipelineTriggers([
+    githubPush()
+  ])
+])
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) (or [oxc](https://oxc.rs) when used in [rolldown-vite](https://vite.dev/guide/rolldown)) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+pipeline {
+  agent any
+  
+  tools {
+    nodejs 'node18'
+  }
+  
+  stages {
+    stage('Checkout') {
+      steps {
+        git branch: 'master', url: 'URL_REPOSITORIO_GIT'
+      }
+    }
 
-## React Compiler
+    stage('Install') {
+      steps {
+        echo "Instalando dependencias..."
+        sh 'node -v'
+        sh 'npm -v'
+        sh 'npm install'
+      }
+    }
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+    stage('Deploy') {
+      steps {
+        echo "Desplegando aplicación..."
+        sh 'echo "Deploy completado"'
+      }
+    }
+  }
+}
 
-## Expanding the ESLint configuration
-
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+- Instalar en Jenkins Node como Plugin
+- En Tools añadir una instalación de NodeJS  Node18
+- Realizar un commit a master y verificar en Jenkins el despliegue.
+- Añadir ejecución de test
+- Añadir verificación de dependencias
+*** Corregir los defectos hasta obtener un despliegue exitoso.
